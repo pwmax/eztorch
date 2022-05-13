@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from torchsummary import summary
 
 def conv3x3_pool(in_channels, out_channels, max_pool=False):
     if max_pool:
@@ -47,6 +48,16 @@ class ConvModel(nn.Module):
         x = self.fc_layers(x)
         return x
 
+    def load_state(self, state_path):
+        state = torch.load(state_path)
+        self.load_state_dict(state)
+    
+    def save_state(self, save_path):
+        torch.save(self.state_dict(), save_path)
+
+    def info(self):
+        summary(self, (self.in_channels, 256, 256), device='cpu')
+
     def _make_conv_layers(self):
         l = [2, 2, 2, 3, 3, 3]
         c = [4, 4, 8, 8, 16, 16]
@@ -92,3 +103,4 @@ if __name__ == '__main__':
     data = torch.zeros(1, 3, 256, 256)
     out = model(data)
     print(out.shape)
+    model.info()

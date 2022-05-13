@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from torchsummary import summary
 
 def fc_block(in_size, out_size):
     return nn.Sequential(
@@ -19,6 +20,16 @@ class FcModel(nn.Module):
     def forward(self, x):
         x = self.fc_layers(x)
         return x
+    
+    def load_state(self, state_path):
+        state = torch.load(state_path)
+        self.load_state_dict(state)
+    
+    def save_state(self, save_path):
+        torch.save(self.state_dict(), save_path)
+
+    def info(self):
+        summary(self, input_size=(1, self.in_features), device='cpu')
 
     def _make_fc_layers(self):
         in_size = self.in_features
@@ -38,7 +49,8 @@ class FcModel(nn.Module):
         self.fc_layers = nn.Sequential(*self.fc_layers)
 
 if __name__ == '__main__':
-    model = FcModel(in_features=10, out_features=2, num_layers=3)
-    data = torch.zeros(1, 10)
+    model = FcModel(in_features=100, out_features=2, num_layers=2)
+    data = torch.zeros(1, 100)
     out = model(data)
     print(out.shape)
+    model.info()
