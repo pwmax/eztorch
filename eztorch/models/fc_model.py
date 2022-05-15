@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-from torchsummary import summary
 
 def fc_block(in_size, out_size):
     return nn.Sequential(
@@ -27,9 +26,6 @@ class FcModel(nn.Module):
     
     def save_state(self, save_path):
         torch.save(self.state_dict(), save_path)
-
-    def info(self):
-        summary(self, input_size=(1, self.in_features), device='cpu')
 
     def _make_fc_layers(self):
         in_size = self.in_features
