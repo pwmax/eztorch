@@ -6,6 +6,5 @@ setup(
     description = 'Train pytorch models in one line',
     license='MIT',
     packages = ['eztorch'],
-    install_requires = ['pytorch'],
     include_package_data=True
 )
