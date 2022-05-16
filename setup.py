@@ -7,4 +7,5 @@ setup(
     license='MIT',
     packages = ['eztorch'],
     install_requires = ['pytorch'],
+    include_package_data=True
 )
