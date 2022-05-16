@@ -1,0 +1,1 @@
+from eztorch import trainer, fc_model, conv_model
