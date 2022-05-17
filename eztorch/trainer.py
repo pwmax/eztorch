@@ -56,7 +56,7 @@ class Trainer:
 
     def save_model(self, path):
         state = self.model.state_dict()
-        torch.save(state, save_path)
+        torch.save(state, path)
     
     def load_model(self, path):
         state = torch.load(path)
