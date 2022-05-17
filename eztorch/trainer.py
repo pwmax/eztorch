@@ -54,6 +54,14 @@ class Trainer:
         optim.step()
         return rloss
 
+    def save_model(self, path):
+        state = self.model.state_dict()
+        torch.save(state, save_path)
+    
+    def load_model(self, path):
+        state = torch.load(path)
+        self.model = self.model.load_state_dict(state)
+
     def _data_transform(self, x, y, device, task):
         model_in_shape = self._model_input_shape()
         x = x.to(device)
@@ -79,7 +87,3 @@ class Trainer:
         p = next(iter(self.model.parameters()))
         p = p.shape
         return p
-
-    def _save_model(self, save_path):
-        state = self.model.state_dict()
-        torch.save(state, save_path)
