@@ -60,7 +60,7 @@ class Trainer:
     
     def load_model(self, path):
         state = torch.load(path)
-        self.model = self.model.load_state_dict(state)
+        self.model.load_state_dict(state)
 
     def _data_transform(self, x, y, device, task):
         model_in_shape = self._model_input_shape()
