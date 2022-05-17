@@ -26,7 +26,7 @@ class Trainer:
                 loss = self.update(x, y, criterion, optim)
                 print('epoch (%i/%i) loss %.7f' % (e, epoch, loss.item()))
                 
-        self._save_model(save_path)
+        self.save_model(save_path)
     
     def regression(self, epoch, dataloader, lr, device, save_path, loss='mse', model_state=None):
         if model_state:
@@ -44,7 +44,7 @@ class Trainer:
                 loss = self.update(x, y, criterion, optim)
                 print('epoch (%i/%i) loss %.7f' % (e, epoch, loss.item()))
     
-        self._save_model(save_path)
+        self.save_model(save_path)
     
     def update(self, x, y, loss, optim):
         optim.zero_grad()
