@@ -10,7 +10,7 @@ from eztorch.fc_model import FcModel
 model = FcModel(in_features=784, out_features=10, num_layers=3)
 trainer = Trainer(model)
 dataset = TrainData()
-dataloader = DataLoader()
+dataloader = DataLoader(dataset)
 
 trainer.classification(epoch=10, dataloader=dataloader, 
                         lr=1e-3, device='cpu', save_path='model.pth')
