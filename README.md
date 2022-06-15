@@ -4,10 +4,8 @@ Train pytorch models in one line
 ### Example
 ```
 from eztorch.trainer import Trainer
-from eztorch.conv_model import ConvModel
-from eztorch.fc_model import FcModel
 
-model = FcModel(in_features=784, out_features=10, num_layers=3)
+model = Model()
 trainer = Trainer(model)
 dataset = TrainData()
 dataloader = DataLoader(dataset)
