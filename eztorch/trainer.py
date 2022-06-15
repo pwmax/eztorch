@@ -46,12 +46,13 @@ class Trainer:
     
         self.save_model(save_path)
     
-    def update(self, x, y, loss, optim):
-        optim.zero_grad()
+    def update(self, x, y, loss, optimizer):
+        for param in self.model.parameters():
+            param.grad = None
         out = self.model(x)
         rloss = loss(out, y)
         rloss.backward()
-        optim.step()
+        optimizer.step()
         return rloss
 
     def save_model(self, path):
