@@ -28,7 +28,7 @@ class Trainer:
         
         self.model.to(device)
         criterion = loss_dict[loss]
-        optim = torch.optim.Adam(model.parameters(), lr=lr)
+        optim = torch.optim.Adam(self.model.parameters(), lr=lr)
         loss_list = []
         val_loss_list = []
 
