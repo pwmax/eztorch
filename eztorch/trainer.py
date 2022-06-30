@@ -1,10 +1,12 @@
 import torch
 import torch.nn as nn
+from torch.cuda.amp import GradScaler, autocast
+
 
 class Trainer:
     def __init__(self, model):
         self.model = model
-    
+
     def train(self, 
         loss, 
         device, 
@@ -17,7 +19,7 @@ class Trainer:
         input_data_transform=None, 
         out_data_transform=None
     ):
-        
+    
         assert(loss in ['mse', 'mae', 'crossentropy', 'binarycrossentropy'])
         loss_dict = nn.ModuleDict([
             ['mse', nn.MSELoss()],
@@ -55,6 +57,59 @@ class Trainer:
                 print(f'epoch {epoch}  loss {rloss.item():.9f}')
             self.save_model(f'{save_path}{epoch}-model.pth')
 
+    def AMPtrain(self, 
+        loss, 
+        device, 
+        lr, 
+        epoch, 
+        save_path, 
+        train_dataloader, 
+        val_dataloader=None, 
+        loss_data_fn=None, 
+        input_data_transform=None, 
+        out_data_transform=None
+    ):
+        
+        assert(loss in ['mse', 'mae', 'crossentropy', 'binarycrossentropy'])
+        loss_dict = nn.ModuleDict([
+            ['mse', nn.MSELoss()],
+            ['mae', nn.L1Loss()],
+            ['crossentropy', nn.CrossEntropyLoss()],
+            ['binarycrossentropy', nn.BCELoss()]
+        ])
+        
+        self.model.to(device)
+        scaler = GradScaler()
+        criterion = loss_dict[loss]
+        optim = torch.optim.Adam(self.model.parameters(), lr=lr)
+        loss_list = []
+        val_loss_list = []
+
+        for epoch in range(epoch):
+            if val_dataloader:
+                val_loss_list.extend(self.eval_model(val_dataloader, device, criterion, 
+                                        input_data_transform, out_data_transform))
+
+            for x, y in train_dataloader:
+                x, y = x.to(device), y.to(device)
+                if input_data_transform:
+                    x, y = input_data_transform(x, y)
+                for param in self.model.parameters():
+                    param.grad = None
+                
+                with autocast():
+                    out = self.model(x)
+                    if out_data_transform:
+                        out = out_data_transform(out)
+                    rloss = criterion(out, y)
+                scaler.scale(rloss).backward()
+                scaler.step(optim)
+                scaler.update()
+                loss_list.append(rloss.item())
+                if loss_data_fn:
+                    loss_data_fn(loss_list, val_loss_list)
+                print(f'epoch {epoch}  loss {rloss.item():.9f}')
+            self.save_model(f'{save_path}{epoch}-model.pth')
 
     def eval_model(self, val_dataloader, device, loss,
                     input_data_transform=None, out_data_transform=None):
