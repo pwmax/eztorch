@@ -6,6 +6,6 @@ setup(
     description = 'Train pytorch models in one line',
     license='MIT',
     packages = find_packages(),
-    python_requires='>=3.7',
+    python_requires='>=3.8',
     include_package_data=True
 )
