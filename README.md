@@ -14,7 +14,8 @@ train_dataloader = DataLoader(train_dataset)
 val_dataset = ValDataset()
 val_dataloader = DataLoader(val_dataset)
 
-def show_loss(train_loss, val_loss):
+def show_loss(train_loss, val_loss, epoch):
+  print(f'epocdh {epoch} loss {train_loss[-1]:.9f}') 
   if keyboard.is_pressed('3'):
       plt.ylim(0, 10)
       plt.plot(train_loss, "-r", label="train loss")
