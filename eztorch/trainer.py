@@ -53,8 +53,7 @@ class Trainer:
                 optim.step()
                 loss_list.append(rloss.item())
                 if loss_data_fn:
-                    loss_data_fn(loss_list, val_loss_list)
-                print(f'epoch {epoch}  loss {rloss.item():.9f}')
+                    loss_data_fn(loss_list, val_loss_list, epoch)
             self.save_model(f'{save_path}{epoch}-model.pth')
 
     def AMPtrain(self, 
@@ -107,8 +106,7 @@ class Trainer:
                 scaler.update()
                 loss_list.append(rloss.item())
                 if loss_data_fn:
-                    loss_data_fn(loss_list, val_loss_list)
-                print(f'epoch {epoch}  loss {rloss.item():.9f}')
+                    loss_data_fn(loss_list, val_loss_list, epoch)
             self.save_model(f'{save_path}{epoch}-model.pth')
 
     def eval_model(self, val_dataloader, device, loss,
